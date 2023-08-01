@@ -1,0 +1,5 @@
+# Android Resolver Properties Start
+android.useAndroidX=true
+android.enableJetifier=true
+# Android Resolver Properties End
+**ADDITIONAL_PROPERTIES**
