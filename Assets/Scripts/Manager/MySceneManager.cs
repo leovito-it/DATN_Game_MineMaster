@@ -1,5 +1,5 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using SFX;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -22,11 +22,11 @@ public class MySceneManager : MonoBehaviour
 
     void ResizeByPlatform()
     {
-        Debug.Log(Application.platform + " - "  + SystemInfo.deviceModel);
+        Debug.Log(Application.platform + " - " + SystemInfo.deviceModel);
 
         foreach (CanvasScaler scaler in FindObjectsOfType<CanvasScaler>())
         {
-            scaler.matchWidthOrHeight = SystemInfo.deviceModel.StartsWith("iPad") ? 1:0;
+            scaler.matchWidthOrHeight = SystemInfo.deviceModel.StartsWith("iPad") ? 1 : 0;
         }
     }
 
@@ -44,7 +44,7 @@ public class MySceneManager : MonoBehaviour
 
     void PlayBG()
     {
-        AudioManager.Instance.PlayBG(clipBg);
+        SFX_Manager.Instance.PlayBG(clipBg);
     }
 
     void ShowAds()
@@ -67,7 +67,7 @@ public class MySceneManager : MonoBehaviour
 
     public static void LoadScene(string name)
     {
-         GameObject.FindObjectOfType<MonoBehaviour>().StartCoroutine(AnimationLoadScene(name));
+        GameObject.FindObjectOfType<MonoBehaviour>().StartCoroutine(AnimationLoadScene(name));
     }
 
     static IEnumerator AnimationLoadScene(string name)

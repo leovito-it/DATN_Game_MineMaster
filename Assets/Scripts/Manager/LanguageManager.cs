@@ -31,8 +31,10 @@ public class LanguageManager : MonoBehaviour
         }
     }
 
+#if UNITY_EDITOR
     private void OnValidate()
     {
         UseLanguageText();
     }
+#endif
 }

@@ -137,7 +137,7 @@ MonoBehaviour:
         m_CallState: 2
 --- !u!95 &4896452577171583356
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -154,7 +154,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &1084132288665075865
 GameObject:
   m_ObjectHideFlags: 0
@@ -235,7 +235,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: "Ch\u01A1i"
+  m_Text: Okay
 --- !u!114 &4220155968786387815
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2573,7 +2573,7 @@ MonoBehaviour:
         m_CallState: 2
 --- !u!95 &3438271737094952066
 Animator:
-  serializedVersion: 4
+  serializedVersion: 5
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -2590,7 +2590,7 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
-  m_KeepAnimatorControllerStateOnDisable: 0
+  m_KeepAnimatorStateOnDisable: 0
 --- !u!1 &8084176100986037318
 GameObject:
   m_ObjectHideFlags: 0

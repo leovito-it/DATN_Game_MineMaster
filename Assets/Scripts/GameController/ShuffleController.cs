@@ -1,4 +1,5 @@
 ﻿using DG.Tweening;
+using SFX;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -29,7 +30,7 @@ public class ShuffleController : MonoBehaviour
     static readonly int SCORE_TO_UNLOCK = 5;
 
     List<Vector3> startPosList = new List<Vector3>();
-    
+
     int score = 0;
     bool autoShuffle = true;
 
@@ -66,7 +67,7 @@ public class ShuffleController : MonoBehaviour
         //Animator anim = cup.GetComponent<Animator>();
         //if (anim != null)
         //    anim.Play("open");
-        StartCoroutine( CheckObjectIn(cup));
+        StartCoroutine(CheckObjectIn(cup));
     }
 
     private IEnumerator CheckObjectIn(GameObject cup)
@@ -79,12 +80,12 @@ public class ShuffleController : MonoBehaviour
         anim.Play("end");
 
         UpdateButtonState(true);
-        AudioManager.Instance.PlaySEOneShot(success ? getPoint : fail);
+        SFX_Manager.Instance.PlaySEOneShot(success ? getPoint : fail);
 
         GameObject notice = success ? right : failed;
         notice.SetActive(true);
         notice.transform.localPosition = cup.transform.localPosition;
-        notice.transform.DOLocalMove(new Vector3(-455f, 785, 0),1);
+        notice.transform.DOLocalMove(new Vector3(-455f, 785, 0), 1);
 
         yield return new WaitForSeconds(1f);
         AddScore(success ? 1 : -1);
@@ -100,8 +101,8 @@ public class ShuffleController : MonoBehaviour
     private void AddScore(int value)
     {
         score += value;
-        UIManager.Instance.SetTextScore(score,1);
-        LevelManager.Instance.SetProcess(score,SCORE_TO_UNLOCK);
+        UIManager.Instance.SetTextScore(score, 1);
+        LevelManager.Instance.SetProcess(score, SCORE_TO_UNLOCK);
 
         if (score == SCORE_TO_UNLOCK)
             LevelManager.Instance.UnlockNextLevel();
@@ -142,7 +143,7 @@ public class ShuffleController : MonoBehaviour
             if (!isSwapping)
             {
                 StartCoroutine(Swap((int)swapIndex.x, (int)swapIndex.y, timePerSwap));
-                AudioManager.Instance.PlaySEInterval(shuffle,0.5f,1f);
+                SFX_Manager.Instance.PlaySEInterval(shuffle, 0.5f, 1f);
                 timer += timePerSwap;
                 yield return new WaitForSecondsRealtime(timePerSwap);
             }
@@ -159,7 +160,7 @@ public class ShuffleController : MonoBehaviour
         int pos1 = Random.Range(0, cups.Length);
         int pos2 = Random.Range(0, cups.Length);
 
-        while ( pos1 == pos2 )
+        while (pos1 == pos2)
         {
             pos2 = Random.Range(0, cups.Length);
         }

@@ -1,109 +1,60 @@
-using System;
+using DG.Tweening;
 using System.Collections;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 using Random = UnityEngine.Random;
 
-public class MinigameToolKit : MonoBehaviour
+public static class MinigameToolKit
 {
-    /// <summary> Instantiate a GameObject in the duration at the pos </summary>
-    public static void ShowNotice(GameObject obj, Vector2 pos, float duration)
+    /// <summary> Instantiate a GameObject in the duration at the position </summary>
+    public static void Clone(this GameObject obj, Vector2 position, float duration = 0)
     {
-        obj.GetComponent<RectTransform>().position = pos;
-        ShowNotice(obj, duration, false);
+        GameObject newObj = Clone(obj, duration, false);
+        newObj.GetComponent<RectTransform>().position = position;
     }
 
     /// <summary> Show the <b>notice object by instante and destroy all exist</summary>
-    public static GameObject ShowNotice(GameObject obj, float duration, bool destroyPre)
+    public static GameObject Clone(this GameObject obj, float duration = 0, bool destroyPrevClone = false)
     {
         GameObject preNotice = GameObject.Find(obj.name + "(Clone)");
 
-        if (preNotice != null && destroyPre)
-            Destroy(preNotice);
+        if (preNotice != null && destroyPrevClone)
+            GameObject.Destroy(preNotice);
 
-        GameObject notice = Instantiate(obj, obj.transform.parent);
+        GameObject notice = GameObject.Instantiate(obj, obj.transform.parent);
         notice.SetActive(true);
 
-        Destroy(notice, duration);
+        if (duration != 0)
+            GameObject.Destroy(notice, duration);
         return notice;
     }
 
-    /// <summary> Change <b>obj</b> 's sprite after <b>delay time</b></summary>
-    public static IEnumerator DelayChangeSprite(GameObject obj, Sprite sprite, float delayTime)
-    {
-        yield return new WaitForSeconds(delayTime);
-        ChangeSprite(obj, sprite);
-    }
-
     /// <summary> Change <b>obj</b> 's sprite </summary>
-    public static void ChangeSprite(GameObject obj, Sprite sprite)
+    public static void ChangeSprite(this GameObject obj, Sprite sprite)
     {
         if (obj.TryGetComponent(out Image img))
         {
-            obj.GetComponent<RectTransform>().sizeDelta = sprite.rect.size;
             img.sprite = sprite;
+            img.SetNativeSize();
         }
     }
 
-    /// <summary> Play <b>clip</b> using AudioManager script</summary>
-    public static void PlayEF(AudioClip clip)
+    /// <summary> Change sprite </summary>
+    public static void ChangeSprite(this Image img, Sprite sprite)
     {
-        if (AudioManager.Instance != null && clip != null)
-            AudioManager.Instance.PlaySE(clip, false);
-    }
-    /// <summary> Stop All EF</summary>
-    public static void StopAllEF()
-    {
-        if (AudioManager.Instance != null)
-            AudioManager.Instance.StopSE();
+        img.sprite = sprite;
+        img.SetNativeSize();
     }
 
-    /// <summary> Play <b>clip</b> using AudioManager script, can stop when play other EF</summary>
-    public static void PlayEF_AutoStop(AudioClip clip)
+    public static void ChangeSprite(this SpriteRenderer renderer, Sprite sprite)
     {
-        AudioManager.Instance.StopSE();
-        PlayEF(clip);
-    }
-
-    /// <summary> Play <b>clip</b> using AudioManager script</summary>
-    public static IEnumerator PlayEF(AudioClip clip, float duration)
-    {
-        if (AudioManager.Instance != null && clip != null)
-        {
-            float timer = 0f;
-            while (timer < duration)
-            {
-                timer += clip.length;
-                AudioManager.Instance.PlaySE(clip,false);
-
-                yield return new WaitForSeconds(clip.length);
-            }
-        }
-    }
-
-    /// <summary> Play EF after delay time </summary>
-    public static IEnumerator DelayPlayEF(AudioClip clip, float delayTime)
-    {
-        yield return new WaitForSeconds(delayTime);
-        PlayEF(clip);
-    }
-
-    /// <summary> Reload scene after delay time </summary>
-    public static IEnumerator ReloadScene(string sceneName, float delaytime)
-    {
-        yield return new WaitForSeconds(delaytime);
-        if (UnityEngine.SceneManagement.SceneManager.sceneCount > 1)
-        {
-            UnityEngine.SceneManagement.SceneManager.UnloadSceneAsync(UnityEngine.SceneManagement.SceneManager.GetSceneAt(1).name);
-            UnityEngine.SceneManagement.SceneManager.LoadScene(sceneName, LoadSceneMode.Additive);
-        }
+        renderer.sprite = sprite;
     }
 
     /// <summary> Make GameObject within the bound </summary>
-    public static void SetRandomPos(RectTransform pos, RectTransform bound)
+    public static void MakeInsideRect(this RectTransform pos, RectTransform rect)
     {
-        pos.anchoredPosition = bound.anchoredPosition + GetRandomPosition(bound);
+        pos.anchoredPosition = rect.anchoredPosition + GetRandomPosition(rect);
     }
 
     /// <summary> Get a position in the rect that is the sizeDelta of an GameObject</summary>
@@ -117,136 +68,42 @@ public class MinigameToolKit : MonoBehaviour
         return new Vector2(randomX, randomY);
     }
 
-    /// <summary> Zoom in/out GameObject </summary>
-    public static IEnumerator ZoomObject(RectTransform rt, float maxScale, float zoomTime)
-    {
-        float timer = 0;
-        Vector2 startScale = rt.localScale;
-        if (rt.TryGetComponent(out Animator animator))
-        {
-            animator.enabled = false;
-        }
-
-        while (timer <= zoomTime)
-        {
-            timer += Time.deltaTime;
-            rt.localScale = startScale + (timer / zoomTime * (maxScale - startScale.x) * Vector2.one);
-            yield return null;
-        }
-    }
-
-    /// <summary> Fade the object in the time </summary>
-    public static IEnumerator FadeObject(GameObject @object, TransitionType type, float fadeTime)
-    {
-        float timer = 0;
-        Image img = @object.GetComponent<Image>();
-        Color currentColor = img.color;
-        float currentAlpha = img.color.a;
-        while (timer <= fadeTime)
-        {
-            timer += Time.deltaTime;
-
-            Color modified = type == TransitionType.Out ?
-                new Color(0, 0, 0, (0 - currentAlpha) * (timer / fadeTime)) :
-                new Color(0, 0, 0, (1 - currentAlpha) * (timer / fadeTime));
-
-            img.color = currentColor + modified;
-            yield return null;
-        }
-    }
-
-    /// <summary> Move GameObject to end position </summary>
-    public static IEnumerator MoveObject(RectTransform rt, Vector3 endPos, float moveTime)
-    {
-        // moving
-        Vector3 startPos = rt.anchoredPosition;
-        Vector3 normalize = Vector3.Normalize(endPos - (Vector3)rt.anchoredPosition);
-        float distance = Vector3.Distance(rt.anchoredPosition, endPos);
-
-        float timer = 0;
-        while (timer <= moveTime)
-        {
-            timer += Time.deltaTime;
-            rt.anchoredPosition = startPos + (distance * timer / moveTime * normalize); // x = x0 + vector(v) * space(start, end) * percent(t);
-
-            yield return null;
-        }
-        rt.anchoredPosition = endPos;
-    }
-
-    /// <summary> Use object's animator to play current state </summary>
-    public static IEnumerator PlayAnimation(GameObject animationObject, float delayTime)
-    {
-        animationObject.SetActive(true);
-        yield return new WaitForSeconds(delayTime);
-
-        if (animationObject.TryGetComponent(out Animator animator))
-        {
-            PlayAnimation(animator);
-        }
-    }
-
     /// <summary> Play default state of the animator </summary>
-    public static void PlayAnimation(Animator animator)
+    public static void Play(this Animator animator, string stateName = "", float speed = 1)
     {
         animator.enabled = true;
         animator.Rebind();
-    }
-
-    /// <summary> Play the exist state of the animator in the time </summary>
-    public static IEnumerator PlayAnimation(Animator animator, string stateName, float playTime)
-    {
-        PlayAnimation(animator);
         animator.Play(stateName);
-
-        yield return new WaitForSeconds(playTime);
-        animator.enabled = false;
+        animator.speed = speed;
     }
 
-    /// <summary> Active an object in the time</summary>
-    public static IEnumerator ActiveObject(GameObject @object, float activeTime)
+    /// <summary> Disable all </summary>
+    public static void Disable(this Component[] disableList)
     {
-        @object.SetActive(true);
-        yield return new WaitForSeconds(activeTime);
-        @object.SetActive(false);
-    }
-
-    /// <summary> Disable all objects in the array </summary>
-    public static void DisableObject(GameObject[] disableList)
-    {
-        foreach (GameObject @object in disableList)
-            @object.SetActive(false);
+        foreach (var @object in disableList)
+            @object.gameObject.SetActive(false);
     }
 
     /// <summary> Create after image of the object </summary>
-    public static IEnumerator CreateAfterImage(GameObject obj, float alphaColor, float showTime, float timeStep, float endTime)
+    public static void CreateAfterImage(this Image img, float alphaColor, float showTime, float timeStep, float endTime)
     {
-        float timer = 0;
-        GameObject newObject = new GameObject();
-        GameObject parent = Instantiate(newObject, obj.transform.parent);
-        parent.name = "After Image Object Parent";
-        parent.transform.SetSiblingIndex(obj.transform.GetSiblingIndex());
+        GameObject container = new("AI Container");
+        container.transform.SetParent(img.transform.parent);
+        container.transform.SetSiblingIndex(img.transform.GetSiblingIndex());
 
-        while (timer <= endTime)
+        DOVirtual.Float(0f, endTime, endTime, (x) =>
         {
-            timer += timeStep;
-            GameObject afterObject = Instantiate(obj, parent.transform);
-            afterObject.transform.SetSiblingIndex(0);
-            Image afterImage = afterObject.GetComponent<Image>();
+            if (x % timeStep != 0)
+                return;
 
-            afterImage.color = new Color(1, 1, 1, alphaColor);
-            Destroy(afterObject, showTime);
+            Image newImg = GameObject.Instantiate(img, container.transform);
+            newImg.transform.SetAsFirstSibling();
 
-            yield return new WaitForSeconds(timeStep);
-        }
-        Destroy(newObject);
-        Destroy(parent);
-    }
+            newImg.color = new Color(1, 1, 1, alphaColor);
+            GameObject.Destroy(newImg.gameObject, showTime);
+        });
 
-    public static void PlayEF(AudioClip clip, float from, float to)
-    {
-        if (AudioManager.Instance != null && clip != null)
-            AudioManager.Instance.PlaySEInterval(clip, from, to);
+        GameObject.Destroy(container);
     }
 
     /// <summary>  <para>Spawn with the SpawnOptions</para> </summary>
@@ -267,18 +124,16 @@ public class MinigameToolKit : MonoBehaviour
         }
     }
 
-    public static void AddForce(GameObject obj, Vector2 force)
+    public static void AddForce(this GameObject obj, Vector2 force)
     {
-        if (obj.GetComponent<Rigidbody2D>() == null)
-            obj.AddComponent<Rigidbody2D>();
+        if (!obj.TryGetComponent(out Rigidbody2D body))
+            body = obj.AddComponent<Rigidbody2D>();
 
-        Rigidbody2D body = obj.GetComponent<Rigidbody2D>();
         body.gravityScale = 0;
-
         body.AddForce(force);
     }
 
-    public static IEnumerator Shake(RectTransform rt, LockAxis lockAxis, float strength, float time)
+    public static IEnumerator Shake(this RectTransform rt, LockAxis lockAxis, float strength, float time)
     {
         float timer = 0f;
         Vector2 start = rt.anchoredPosition;
@@ -345,7 +200,7 @@ public class MinigameToolKit : MonoBehaviour
 
         public GameObject CreateObject()
         {
-            GameObject newObj = Instantiate(GetObject(), container);
+            GameObject newObj = GameObject.Instantiate(GetObject(), container);
             newObj.SetActive(true);
 
             RectTransform rt = newObj.GetComponent<RectTransform>();
@@ -362,11 +217,11 @@ public class MinigameToolKit : MonoBehaviour
 
             if (randomDirect != 0)
             {
-                AddForce(newObj, randomDirect * Random.insideUnitCircle);
+                newObj.AddForce(randomDirect * Random.insideUnitCircle);
             }
             return newObj;
         }
 
-        public enum NameRule { JustName ,WithClone, WithOrderNumber }
+        public enum NameRule { JustName, WithClone, WithOrderNumber }
     }
 }

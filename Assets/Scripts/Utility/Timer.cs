@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class Timer : MonoBehaviour
+public class Timer : Singleton<Timer>
 {
-    public static Timer Instance => GameObject.Find("Time")?.GetComponent<Timer>();
     public Color cdbarColor, textColor;
 
     public static float currentTime = 0f;
@@ -18,7 +17,6 @@ public class Timer : MonoBehaviour
     [Header("Alert")]
     public Image alertObj;
     public float timeAlert = 10f;
-    public AudioClip alertClip;
 
     bool alertShowing = false;
 
@@ -84,8 +82,6 @@ public class Timer : MonoBehaviour
     {
         alertShowing = true;
         StartCoroutine(ChangeColor());
-
-        AudioManager.Instance.PlaySEInterval(alertClip, 0, timeAlert);
     }
 
     IEnumerator ChangeColor()

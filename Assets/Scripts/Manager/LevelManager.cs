@@ -1,4 +1,5 @@
-﻿using System;
+﻿using SFX;
+using System;
 using System.Collections.Generic;
 using UnityEditor;
 using UnityEngine;
@@ -39,7 +40,7 @@ public class LevelManager : MonoBehaviour
     public Text txtLv, txtProcess;
 
     public GameObject info, congratulations, failed;
-    
+
     public Text title, text1, text2;
 
     public AudioClip failClip, successClip;
@@ -65,7 +66,7 @@ public class LevelManager : MonoBehaviour
         {
             StartCoroutine(DEFINE.ShowAndHide(congratulations, 3));
             showCongratulations = false;
-            AudioManager.Instance.PlaySEOneShot(successClip);
+            SFX_Manager.Instance.PlaySEOneShot(successClip);
         }
     }
 
@@ -74,7 +75,7 @@ public class LevelManager : MonoBehaviour
         DEFINE.SetText(txtProcess, $"{current} / {final}");
     }
 
-    public void SetInfo(string varName1, string varName2) 
+    public void SetInfo(string varName1, string varName2)
     {
         DEFINE.SetText(title, DEFINE.LEVEL + " " + GetLevel());
         DEFINE.SetText(text1, varName1 + ": " + DEFINE.ColorText(m_var1 + "", "#f00"));
@@ -99,7 +100,7 @@ public class LevelManager : MonoBehaviour
     public void Failed()
     {
         failed.SetActive(true);
-        AudioManager.Instance.PlaySEOneShot(failClip);
+        SFX_Manager.Instance.PlaySEOneShot(failClip);
     }
 
     public void UnlockNextLevel()
@@ -126,11 +127,11 @@ public class LevelManager : MonoBehaviour
         DEFINE.Save(DEFINE.CurrentScene + DEFINE.LEVEL, Level + 1);
     }
 
-    public void UpdateVars( ref float var1, ref float var2, Rule rule)
+    public void UpdateVars(ref float var1, ref float var2, Rule rule)
     {
         float old1 = var1, old2 = var2;
         // Get var
-        if ( rule.defined.Count > Level - 1)
+        if (rule.defined.Count > Level - 1)
         {
             var1 = rule.defined[Level - 1].x;
             var2 = rule.defined[Level - 1].y;

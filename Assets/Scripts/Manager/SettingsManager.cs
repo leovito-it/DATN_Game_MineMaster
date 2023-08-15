@@ -1,21 +1,43 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using SFX;
+using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
-using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
 
 public class SettingsManager : MonoBehaviour
 {
-    public Slider sliderBG, sliderSE;
+    public Button btnBG, btnSE;
+
+    public GameObject disableBG, disableSE;
+
+    private void Start()
+    {
+        btnBG.onClick.AddListener(() => ChangeBG());
+        btnSE.onClick.AddListener(() => ChangeSE());
+    }
+
+    bool BGmute
+    {
+        get { return SFX_Manager.Instance.BGmute; }
+        set { SFX_Manager.Instance.BGmute = value; }
+    }
+    bool SEmute
+    {
+        get { return SFX_Manager.Instance.SEmute; }
+        set { SFX_Manager.Instance.SEmute = value; }
+    }
 
     public void ChangeBG()
     {
-        AudioManager.Instance.SetVolumnBG(sliderBG.value);
+        BGmute = !BGmute;
+        OnEnable();
     }
 
     public void ChangeSE()
     {
-        AudioManager.Instance.SetVolumnSE(sliderSE.value);
+        SEmute = !SEmute;
+        OnEnable();
     }
 
     public void ChangeLanguage()
@@ -23,10 +45,15 @@ public class SettingsManager : MonoBehaviour
         ChangeCurrentLanguage();
     }
 
+    public void Close()
+    {
+        PopupManager.Instance.CloseSettings();
+    }
+
     private void OnEnable()
     {
-        sliderBG.value = AudioManager.Instance.BGvol;
-        sliderSE.value = AudioManager.Instance.SEvol;
+        disableBG.SetActive(BGmute);
+        disableSE.SetActive(SEmute);
     }
 
     static void ChangeCurrentLanguage()

@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Scenes/Game/FlipMe.unity
     guid: 6eba6d92e43ac3946abb60d6b41bd16a
   - enabled: 1
-    path: Assets/Scenes/Game/MineSweeper.unity
+    path: Assets/Scenes/MineSweeper.unity
     guid: 608bcae50fe5dc54fa5af3baa56273da
   - enabled: 1
     path: Assets/Scenes/Game/Num100.unity

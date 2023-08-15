@@ -3,7 +3,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 
-public class UIManager : SingletonMonoBehaviour<UIManager>
+public class UIManager : Singleton<UIManager>
 {
     [Header("Set TEXT")]
     public Text txtScore;

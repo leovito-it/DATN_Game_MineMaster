@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using SFX;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -10,7 +11,7 @@ public class FlipGameController : MonoBehaviour
 
     public Transform container;
 
-    public AudioClip flip ,getPoint, fail;
+    public AudioClip flip, getPoint, fail;
 
     float overTime;
     float numObjects;
@@ -52,7 +53,7 @@ public class FlipGameController : MonoBehaviour
 
     IEnumerator Create()
     {
-        creator.maxObject = (int)numObjects/2;
+        creator.maxObject = (int)numObjects / 2;
         creator.SpawnObjects();
         yield return new WaitForFixedUpdate();
         NumberManager.SetValues(100);
@@ -75,7 +76,7 @@ public class FlipGameController : MonoBehaviour
 
         container.GetComponent<GridLayoutGroup>().constraintCount = Mathf.FloorToInt(Mathf.Sqrt(numObjects));
         if ((int)numObjects == 20)
-            container.GetComponent<GridLayoutGroup>().cellSize *= 0.9f; 
+            container.GetComponent<GridLayoutGroup>().cellSize *= 0.9f;
     }
 
     void Mix()
@@ -112,7 +113,7 @@ public class FlipGameController : MonoBehaviour
         isReady = false;
 
         Flip(obj);
-        AudioManager.Instance.PlaySEOneShot(flip);
+        SFX_Manager.Instance.PlaySEOneShot(flip);
 
         if (num1 == null)
         {
@@ -153,16 +154,16 @@ public class FlipGameController : MonoBehaviour
             num2.GetComponent<Button>().enabled = false;
 
             AddScore(2);
-            AudioManager.Instance.PlaySEOneShot(getPoint);
+            SFX_Manager.Instance.PlaySEOneShot(getPoint);
         }
         else
         {
             num1.GetComponent<Animator>().Play("fail");
             num2.GetComponent<Animator>().Play("fail");
-            AudioManager.Instance.PlaySEOneShot(fail);
+            SFX_Manager.Instance.PlaySEOneShot(fail);
         }
 
-        Invoke(nameof(Reset), value1 == value2 ? 0: 0.5f) ;
+        Invoke(nameof(Reset), value1 == value2 ? 0 : 0.5f);
     }
 
     void AddScore(int value)

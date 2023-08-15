@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using SFX;
+using UnityEngine;
 using UnityEngine.UI;
 
 public class Num100Controller : MonoBehaviour
@@ -51,7 +52,7 @@ public class Num100Controller : MonoBehaviour
 
         ObjectCreateManager creator = FindObjectOfType<ObjectCreateManager>();
         creator.SpawnObjects();
-        numObjects = creator.maxObject; 
+        numObjects = creator.maxObject;
 
         NumberManager.SetValues(randomRange < numObjects ? numObjects : randomRange);
         SetOnClick();
@@ -90,7 +91,7 @@ public class Num100Controller : MonoBehaviour
 
         if (lose)
             GameOverAction();
-        
+
         if (win)
             LevelManager.Instance.UnlockNextLevel();
     }
@@ -112,7 +113,7 @@ public class Num100Controller : MonoBehaviour
         if (IsTrueTarget(numberManager.value))
         {
             // play audio
-            AudioManager.Instance.PlaySE(config.clipTrueClick, false);
+            SFX_Manager.Instance.PlaySE(config.clipTrueClick, false);
 
             DestroyObject(clicked);
 
@@ -124,7 +125,7 @@ public class Num100Controller : MonoBehaviour
         }
         else
         {
-            AudioManager.Instance.PlaySE(config.clipFalseClick, false);
+            SFX_Manager.Instance.PlaySE(config.clipFalseClick, false);
         }
     }
 
@@ -165,7 +166,7 @@ public class Num100Controller : MonoBehaviour
             case NextTarget.Higher:
                 {
                     NumberManager.values.Sort((a, b) => a.CompareTo(b));
-                    
+
                     break;
                 }
             case NextTarget.Lower:
@@ -211,7 +212,7 @@ public class Num100Controller : MonoBehaviour
     {
         float current = Timer.currentTime;
 
-        if ( current < GetBest())
+        if (current < GetBest())
         {
             PlayerPrefs.SetFloat(DEFINE.KEY_BEST + numObjects, current);
         }

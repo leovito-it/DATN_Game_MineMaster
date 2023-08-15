@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class PageManager : SingletonMonoBehaviour<PageManager>
+public class PageManager : Singleton<PageManager>
 {
     public RectTransform ScrollContent;
     public Transform StepContainer;

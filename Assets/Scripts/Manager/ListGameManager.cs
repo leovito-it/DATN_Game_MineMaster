@@ -11,7 +11,7 @@ public struct GameInfo
     public Sprite icon;
 }
 
-public class ListGameManager : SingletonMonoBehaviour<ListGameManager>
+public class ListGameManager : Singleton<ListGameManager>
 {
     public GameInfo[] games;
 
