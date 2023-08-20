@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class RopeController : Singleton<RopeController>
 {
-    public Transform ropeOrigin;
     public float minLength = 2f;
     public float maxLength = 10f;
     public float rotateSpeed = 45f;
@@ -13,13 +12,20 @@ public class RopeController : Singleton<RopeController>
     public Vector2 rotateRange = new Vector2(-45f, 45f);
 
     private LineRenderer ropeRenderer;
-    [SerializeField] private bool isSwinging = true;
-    [SerializeField] private bool isExtending = false;
-    [SerializeField] private bool isRetracting = false;
+    //[SerializeField] 
+    private bool isSwinging = true;
+    //[SerializeField] 
+    private bool isExtending = false;
+    //[SerializeField]
+    private bool isRetracting = false;
+
+    [SerializeField] Animator hoistAnimator;
 
     [SerializeField] Transform hook;
     [SerializeField] Transform hookContainer;
+    Animator hookAnimator;
     GameObject hookedObject;
+    [SerializeField] int hookedWeight = 0;
 
     private float currentRotation = 0f;
     private int rotateDirection = 1;
@@ -30,6 +36,8 @@ public class RopeController : Singleton<RopeController>
         ropeRenderer.positionCount = 2;
         ropeRenderer.SetPosition(0, Vector3.zero);
         ropeRenderer.SetPosition(1, Vector3.down * minLength);
+
+        hookAnimator = hook.GetComponent<Animator>();
     }
 
     private void Update()
@@ -64,29 +72,28 @@ public class RopeController : Singleton<RopeController>
         currentRotation += rotateDirection * rotateSpeed * Time.deltaTime;
         currentRotation = Mathf.Clamp(currentRotation, rotateRange.x, rotateRange.y);
 
-        ropeOrigin.transform.rotation = Quaternion.Euler(0f, 0f, currentRotation);
-
-        //Vector3 direction = Quaternion.Euler(0f, 0f, currentRotation) * Vector3.down;
-        //Vector3 newPosition = ropeOrigin.position + direction * minLength;
-
-        //ropeRenderer.SetPosition(1, newPosition);
+        transform.rotation = Quaternion.Euler(0f, 0f, currentRotation);
     }
 
     private IEnumerator ExtendRope()
     {
         float currentLength = minLength;
 
+        PlayAnim(hoistAnimator);
+
         while (isExtending && currentLength < maxLength)
         {
             currentLength += elongatedSpeed * Time.deltaTime;
-            Vector3 currentDirect = Vector3.down; //ropeRenderer.GetPosition(1) - ropeOrigin.position;
-            Vector3 newPosition = ropeOrigin.position + currentDirect.normalized * currentLength;
+            Vector3 currentDirect = Vector3.down;
+            Vector3 newPosition = transform.position + currentDirect.normalized * currentLength;
             ropeRenderer.SetPosition(1, newPosition);
             yield return null;
         }
 
         isExtending = false;
         isRetracting = true;
+
+        PlayAnimInvert(hoistAnimator);
     }
 
     private void RetractRope()
@@ -94,36 +101,60 @@ public class RopeController : Singleton<RopeController>
         Vector3 direction = Vector3.up;
         float distance = Mathf.Abs(ropeRenderer.GetPosition(1).y);
 
+        if (hookedObject == null) hookedWeight = 0;
+
         if (distance > minLength)
         {
             direction.Normalize();
-            Vector3 newPosition = ropeRenderer.GetPosition(1) + retractionSpeed * Time.deltaTime * direction;
+            Vector3 newPosition = ropeRenderer.GetPosition(1) + (retractionSpeed - hookedWeight) * Time.deltaTime * direction;
             ropeRenderer.SetPosition(1, newPosition);
         }
         else
         {
             isRetracting = false;
-            ropeRenderer.SetPosition(1, Vector3.down * minLength);
             isSwinging = true;
 
+            ropeRenderer.SetPosition(1, Vector3.down * minLength);
             if (hookedObject != null)
             {
                 Destroy(hookedObject);
             }
+
+            StopAnim(hoistAnimator);
+            StopAnim(hookAnimator);
         }
     }
 
     public void RegisterObject(GameObject obj)
     {
+        if (hookedObject != null)
+            return;
+
+        PlayAnim(hookAnimator);
+
         hookedObject = obj;
+        hookedObject.transform.SetParent(hookContainer);
+        hookedObject.transform.localPosition = Vector3.zero;
+
+        hookedWeight = hookedObject.GetComponent<PickupObject>().myWeight;
+
         isExtending = false;
         isRetracting = true;
+    }
 
-        if (hookedObject != null)
-        {
-            hookedObject.transform.SetParent(hookContainer);
-            hookedObject.transform.localPosition = Vector3.zero;
-        }
+    void PlayAnim(Animator animator)
+    {
+        animator.Play("play");
+    }
+
+    void PlayAnimInvert(Animator animator)
+    {
+        animator.Play("playInvert");
+    }
+
+    void StopAnim(Animator animator)
+    {
+        animator.Play("nothing");
     }
 }
 
