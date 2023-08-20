@@ -29,9 +29,9 @@ public class MineController : MonoBehaviour
     float endTime = 120;
 
     // DATA
-    List<int> mineIndex = new List<int>();
-    List<int> clickedIndex = new List<int>();
-    List<int> flaggedIndex = new List<int>();
+    readonly List<int> mineIndex = new();
+    readonly List<int> clickedIndex = new();
+    readonly List<int> flaggedIndex = new();
 
     bool firstCheck = true;
     [SerializeField] bool isDebug = false;
@@ -65,7 +65,7 @@ public class MineController : MonoBehaviour
         for (int i = 0; i < numMine; i++)
         {
             int randomIndex = UnityEngine.Random.Range(0, SiteManager.Instance.Count);
-            while ( mineIndex.Contains(randomIndex) )
+            while (mineIndex.Contains(randomIndex))
             {
                 randomIndex = UnityEngine.Random.Range(0, SiteManager.Instance.Count);
             }
@@ -94,7 +94,7 @@ public class MineController : MonoBehaviour
         {
             int index = i;
             Transform cell = SiteManager.Instance.GetAtIndex(index);
-            cell.GetComponent<Button>().onClick.AddListener(() => OnClickHandle(index) );
+            cell.GetComponent<Button>().onClick.AddListener(() => OnClickHandle(index));
         }
     }
 
@@ -146,7 +146,7 @@ public class MineController : MonoBehaviour
         {
             if (flagCount.childCount == 0)
                 return;
-     
+
             Instantiate(flagObject, pos).name = flagObject.name;
             flaggedIndex.Add(index);
 
@@ -174,10 +174,10 @@ public class MineController : MonoBehaviour
         int mineCount = GetMineAround(index);
         Cell cell = SiteManager.Instance.cells[index];
 
-        if(!isDebug)
+        if (!isDebug)
             AddClicked(index);
 
-        if( cell.Checked)
+        if (cell.Checked)
             return;
 
         cell.Checked = true;
@@ -191,7 +191,7 @@ public class MineController : MonoBehaviour
         {
             Text txt = cell.GetComponentInChildren<Text>();
             txt.text = mineCount.ToString();
-            txt.color = numberColors[Mathf.Min(mineCount-1, numberColors.Length - 1)];
+            txt.color = numberColors[Mathf.Min(mineCount - 1, numberColors.Length - 1)];
             txt.enabled = true;
             txt.gameObject.SetActive(true);
 
@@ -244,7 +244,7 @@ public class MineController : MonoBehaviour
         int count = 0;
         foreach (int flag in flaggedIndex)
         {
-            if(mineIndex.Contains(flag))
+            if (mineIndex.Contains(flag))
             {
                 count++;
             }
@@ -285,8 +285,6 @@ public class MineController : MonoBehaviour
                     btn.GetComponentInChildren<Text>().text = "Check";
                     btn.gameObject.SetActive(false);
                 }
-
-                StartCoroutine(DEFINE.ShowAndHide(tryAgainMessage, 1f));
             }
             else
             {
@@ -335,7 +333,7 @@ public class MineController : MonoBehaviour
     {
         for (int i = 0; i < 100; i++)
         {
-            if(mineIndex.Contains(i))
+            if (mineIndex.Contains(i))
             {
                 Transform pos = SiteManager.Instance.GetAtIndex(i);
                 Instantiate(mineObject, pos).transform.localPosition = Vector3.zero;

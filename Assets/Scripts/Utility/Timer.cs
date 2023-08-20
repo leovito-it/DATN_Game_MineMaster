@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -11,7 +12,7 @@ public class Timer : Singleton<Timer>
     public static float currentTime = 0f;
     public static float remainingTime = 0f;
 
-    public Text txtTime;
+    public TextMeshProUGUI txtTime;
     public Image countdownBar;
 
     [Header("Alert")]

@@ -13,7 +13,7 @@ public static class MinigameToolKit
         newObj.GetComponent<RectTransform>().position = position;
     }
 
-    /// <summary> Show the <b>notice object by instante and destroy all exist</summary>
+    /// <summary> Show the notice object by instante and destroy all exist</summary>
     public static GameObject Clone(this GameObject obj, float duration = 0, bool destroyPrevClone = false)
     {
         GameObject preNotice = GameObject.Find(obj.name + "(Clone)");

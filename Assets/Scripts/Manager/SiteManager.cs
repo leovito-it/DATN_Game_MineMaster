@@ -1,36 +1,36 @@
-﻿using System.Collections;
+﻿
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
-public class Cell : MonoBehaviour
-{
-    public bool Checked = false;
-}
 
 public class SiteManager : MonoBehaviour
 {
     public static SiteManager Instance;
     public Transform site;
-    public int numCol = 10;
-    public int Count => site.childCount;
+    public GridLayoutGroup grid;
+    public Cell prefabCell;
 
-    public List<Cell> cells = new List<Cell>();
+    [Range(0, 20)]
+    public int numCol = 10;
+    [Range(0, 20)]
+    public int numRow = 8;
+
+    const float scale = 0.0053f;
+    public int Count => numCol * numRow;
+
+    public List<Cell> cells = new();
 
     protected void Awake()
     {
         Instance = this;
-
-        for (int i = 0; i < Count; i++)
-        {
-            Cell cell = GetAtIndex(i).gameObject.AddComponent<Cell>();
-            cells.Add(cell);
-        }
+        InitSite();
     }
 
     public Transform GetAtIndex(int row, int col)
     {
         int index = row * col + col;
-        return index < Count && row >=0 && col >= 0 ? site.GetChild(row * col + col) : null ;
+        return index < Count && row >= 0 && col >= 0 ? site.GetChild(row * col + col) : null;
     }
 
     public Transform GetAtIndex(int index)
@@ -83,25 +83,25 @@ public class SiteManager : MonoBehaviour
         up = down = left = right = false;
 
         // left
-        if (col-1>=0)
+        if (col - 1 >= 0)
         {
             left = true;
             result.Add(index - 1);
         }
         // right
-        if (col+1 <numCol)
+        if (col + 1 < numCol)
         {
             right = true;
             result.Add(index + 1);
         }
         // up
-        if (row -1 >= 0)
+        if (row - 1 >= 0)
         {
             up = true;
             result.Add(index - numCol);
         }
         // down
-        if (row + 1 <Count/numCol)
+        if (row + 1 < Count / numCol)
         {
             down = true;
             result.Add(index + numCol);
@@ -128,4 +128,34 @@ public class SiteManager : MonoBehaviour
         }
         return result;
     }
+
+    void InitSite()
+    {
+        if (prefabCell == null)
+            return;
+
+        grid.constraintCount = numCol;
+
+        if (grid == null)
+            return;
+
+        for (int i = 0; i < Count; i++)
+        {
+            Cell newCell = Instantiate(prefabCell, site);
+            cells.Add(newCell);
+        }
+    }
+
+#if UNITY_EDITOR
+    private void OnDrawGizmos()
+    {
+        Vector2 size = grid.cellSize;
+        Vector2 space = grid.spacing;
+        float newX = size.x * numCol + (numCol - 1) * space.x;
+        float newY = size.y * numRow + (numRow - 1) * space.y;
+
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(transform.position, scale * new Vector3(newX, newY, 1));
+    }
+#endif
 }

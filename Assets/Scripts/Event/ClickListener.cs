@@ -3,8 +3,6 @@ using UnityEngine.UI;
 
 public class ClickListener : MonoBehaviour
 {
-    Num100Controller manager => FindObjectOfType<Num100Controller>();
-
     public void BackToGameList()
     {
         LoadLevel(DEFINE.SCENE_GAME_LIST);
@@ -30,11 +28,6 @@ public class ClickListener : MonoBehaviour
     public void QuitGame()
     {
         Application.Quit();
-    }
-
-    public void EndGame()
-    {
-        manager.SetEndGGame(true);
     }
 
     public void OpenSettings()

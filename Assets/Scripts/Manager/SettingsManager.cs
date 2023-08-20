@@ -58,7 +58,7 @@ public class SettingsManager : MonoBehaviour
 
     static void ChangeCurrentLanguage()
     {
-        DEFINE.Save(DEFINE.LANGUAGE, LanguageManager.IsVietnamese ?
+        DEFINE.SaveKey(DEFINE.LANGUAGE, LanguageManager.IsVietnamese ?
             SystemLanguage.English.ToString() : SystemLanguage.Vietnamese.ToString());
 
         foreach (LanguageManager lm in FindObjectsOfType<LanguageManager>())

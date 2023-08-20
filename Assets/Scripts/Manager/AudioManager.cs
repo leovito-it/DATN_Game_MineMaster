@@ -1,14 +1,14 @@
 using System.Collections;
 using UnityEngine;
 
-public class AudioManager : SingletonMonoBehaviour<AudioManager>
+public class AudioManager : Singleton<AudioManager>
 {
     [SerializeField] private bool LoadConfig = true;
 
     [SerializeField] private AudioSource BG_AudioSource; //background music
     [SerializeField] private AudioSource SE_AudioSource; //sound effect
 
-    [Range(0f,1f)]
+    [Range(0f, 1f)]
     public float BGvol, SEvol;
 
     public void SetSE_audioClip(AudioClip _audioClip) => SE_AudioSource.clip = _audioClip;

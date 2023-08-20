@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class MySceneManager : MonoBehaviour
 {
     public bool showAds = false;
-    public AudioClip clipBg;
+    public SoundName sound;
     public GameObject fadeObject;
     [Range(0f, 5f)]
     public float fadeTime = 2f;
@@ -44,7 +44,7 @@ public class MySceneManager : MonoBehaviour
 
     void PlayBG()
     {
-        SFX_Manager.Instance.PlayBG(clipBg);
+        sound.Get().PlayAsBackground();
     }
 
     void ShowAds()

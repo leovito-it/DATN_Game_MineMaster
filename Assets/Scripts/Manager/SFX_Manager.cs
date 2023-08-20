@@ -7,6 +7,7 @@ namespace SFX
 {
     public static class SFX_Extensions
     {
+        /// <summary> Play <b>clip</b> once</summary>
         public static void Play(this AudioClip clip)
         {
             if (SFX_Manager.Instance != null && clip != null)
@@ -27,6 +28,11 @@ namespace SFX
         {
             if (SFX_Manager.Instance != null && clip != null)
                 SFX_Manager.Instance.PlaySEInterval(clip, from, to);
+        }
+
+        public static void PlayAsBackground(this AudioClip clip)
+        {
+            SFX_Manager.Instance.PlayBG(clip);
         }
 
         public static void PlayEF(this GameObject obj, AudioClip clip, float volumnScale = 1f, bool loop = false)
@@ -64,6 +70,7 @@ namespace SFX
             }
         }
 
+        /// <summary> Stop <b>clip</b> on this object</summary>
         public static void StopEF(this GameObject obj)
         {
             if (!obj.TryGetComponent(out AudioSource source))
@@ -91,7 +98,7 @@ namespace SFX
             get { return PlayerPrefs.GetFloat(BG_VOLUMN, 1); }
             set
             {
-                DEFINE.Save(BG_VOLUMN, Mathf.Clamp01(value));
+                DEFINE.SaveKey(BG_VOLUMN, Mathf.Clamp01(value));
 
                 if (BG_AudioSource != null)
                 {
@@ -105,7 +112,7 @@ namespace SFX
             get { return PlayerPrefs.GetFloat(SE_VOLUMN, 1); }
             set
             {
-                DEFINE.Save(SE_VOLUMN, Mathf.Clamp01(value));
+                DEFINE.SaveKey(SE_VOLUMN, Mathf.Clamp01(value));
                 if (SE_AudioSource != null)
                 {
                     SE_AudioSource.volume = value;
@@ -119,7 +126,7 @@ namespace SFX
             get { return PlayerPrefs.GetInt(BG_MUTE, 0) == 1; }
             set
             {
-                DEFINE.Save(BG_MUTE, value ? 1 : 0);
+                DEFINE.SaveKey(BG_MUTE, value ? 1 : 0);
 
                 if (BG_AudioSource != null)
                 {
@@ -133,7 +140,7 @@ namespace SFX
             get { return PlayerPrefs.GetInt(SE_MUTE, 0) == 1; }
             set
             {
-                DEFINE.Save(SE_MUTE, value ? 1 : 0);
+                DEFINE.SaveKey(SE_MUTE, value ? 1 : 0);
 
                 if (SE_AudioSource != null)
                 {

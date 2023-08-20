@@ -1,6 +1,7 @@
 ﻿using SFX;
 using System;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.UI;
@@ -33,15 +34,13 @@ public static class DataCleaner
 }
 #endif
 
-public class LevelManager : MonoBehaviour
+public class LevelManager : Singleton<LevelManager>
 {
-    public static LevelManager Instance => GameObject.Find("LevelManager").GetComponent<LevelManager>();
-
-    public Text txtLv, txtProcess;
+    public TextMeshProUGUI txtLv, txtProcess;
 
     public GameObject info, congratulations, failed;
 
-    public Text title, text1, text2;
+    public TextMeshProUGUI title, text1, text2;
 
     public AudioClip failClip, successClip;
 
@@ -64,7 +63,6 @@ public class LevelManager : MonoBehaviour
 
         if (showCongratulations)
         {
-            StartCoroutine(DEFINE.ShowAndHide(congratulations, 3));
             showCongratulations = false;
             SFX_Manager.Instance.PlaySEOneShot(successClip);
         }
@@ -78,8 +76,8 @@ public class LevelManager : MonoBehaviour
     public void SetInfo(string varName1, string varName2)
     {
         DEFINE.SetText(title, DEFINE.LEVEL + " " + GetLevel());
-        DEFINE.SetText(text1, varName1 + ": " + DEFINE.ColorText(m_var1 + "", "#f00"));
-        DEFINE.SetText(text2, varName2 + ": " + DEFINE.ColorText(m_var2 + "", "#f00"));
+        DEFINE.SetText(text1, varName1 + ": " + DEFINE.SetColor(m_var1 + "", "#f00"));
+        DEFINE.SetText(text2, varName2 + ": " + DEFINE.SetColor(m_var2 + "", "#f00"));
     }
 
     public void ShowInfo()
@@ -119,12 +117,12 @@ public class LevelManager : MonoBehaviour
 
     void SaveLevel()
     {
-        DEFINE.Save(DEFINE.CurrentScene + DEFINE.LEVEL, Level);
+        DEFINE.SaveKey(DEFINE.CurrentScene + DEFINE.LEVEL, Level);
     }
 
     void NextLevel()
     {
-        DEFINE.Save(DEFINE.CurrentScene + DEFINE.LEVEL, Level + 1);
+        DEFINE.SaveKey(DEFINE.CurrentScene + DEFINE.LEVEL, Level + 1);
     }
 
     public void UpdateVars(ref float var1, ref float var2, Rule rule)

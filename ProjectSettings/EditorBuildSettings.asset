@@ -14,16 +14,4 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/GameList.unity
     guid: cea7d44910f6fb94c87da594172af071
-  - enabled: 1
-    path: Assets/Scenes/Game/FlipMe.unity
-    guid: 6eba6d92e43ac3946abb60d6b41bd16a
-  - enabled: 1
-    path: Assets/Scenes/MineSweeper.unity
-    guid: 608bcae50fe5dc54fa5af3baa56273da
-  - enabled: 1
-    path: Assets/Scenes/Game/Num100.unity
-    guid: a20d7240bbeb6594a865ac5ba99db391
-  - enabled: 1
-    path: Assets/Scenes/Game/ShuffleCup.unity
-    guid: a151761b5aa481c4ab8c406c3adf62be
   m_configObjects: {}
