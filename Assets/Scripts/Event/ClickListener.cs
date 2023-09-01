@@ -1,28 +1,21 @@
 ﻿using UnityEngine;
-using UnityEngine.UI;
 
 public class ClickListener : MonoBehaviour
 {
     public void BackToGameList()
     {
-        LoadLevel(DEFINE.SCENE_GAME_LIST);
+        Scenes.DressUp.LoadScene();
     }
 
     public void BackToHome()
     {
-        LoadLevel(DEFINE.SCENE_HOME);
-    }
-
-    public void LoadLevel(string scene)
-    {
-        //load scene
-        DEFINE.LoadScene(scene);
+        Scenes.Home.LoadScene();
     }
 
     public void ReloadLevel()
     {
         //load scene
-        DEFINE.LoadScene(DEFINE.CurrentScene);
+        DEFINE.LoadScene(DEFINE.SceneName);
     }
 
     public void QuitGame()
@@ -32,13 +25,11 @@ public class ClickListener : MonoBehaviour
 
     public void OpenSettings()
     {
-        DEFINE.isPlaying = false;
         PopupManager.Instance.OpenSettings();
     }
 
     public void CloseSettings()
     {
-        DEFINE.isPlaying = true;
         PopupManager.Instance.CloseSettings();
     }
 
@@ -50,15 +41,5 @@ public class ClickListener : MonoBehaviour
     public void ShowBannerAds()
     {
         AdmobManager.Instance.ShowBanner(true);
-    }
-
-    public void PauseGame()
-    {
-        DEFINE.isPlaying = false;
-    }
-
-    public void UnPauseGame()
-    {
-        DEFINE.isPlaying = true;
     }
 }

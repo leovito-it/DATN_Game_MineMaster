@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -46,7 +45,7 @@ public class MyCountdown : MonoBehaviour
     public void Reset()
     {
         currentCD = 0;
-        textCd.text = DEFINE.BLANK;
+        textCd.Clear();
         imgBg.color = Color.white;
         isCDing = false;
     }
@@ -66,6 +65,6 @@ public class MyCountdown : MonoBehaviour
 
     private void OnEnable()
     {
-        
+
     }
 }

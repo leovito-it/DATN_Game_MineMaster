@@ -1,23 +1,22 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class Timer : Singleton<Timer>
 {
-    public Color cdbarColor, textColor;
+    [SerializeField] Color cdbarColor, textColor;
 
     public static float currentTime = 0f;
     public static float remainingTime = 0f;
 
-    public TextMeshProUGUI txtTime;
-    public Image countdownBar;
+    [SerializeField] TextMeshProUGUI txtTime;
+    [SerializeField] Image countdownBar;
 
     [Header("Alert")]
-    public Image alertObj;
-    public float timeAlert = 10f;
+    [SerializeField] Image alertObj;
+    [SerializeField] float timeAlert = 10f;
 
     bool alertShowing = false;
 
@@ -49,7 +48,7 @@ public class Timer : Singleton<Timer>
 
         while (true)
         {
-            if (DEFINE.isPlaying)
+            if (DEFINE.Status == DEFINE.GameStatus.Playing)
             {
                 currentTime += Time.fixedDeltaTime;
                 remainingTime = cdTime - currentTime;

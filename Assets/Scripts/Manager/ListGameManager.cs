@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using UnityEngine;
-using UnityEngine.SceneManagement;
+﻿using UnityEngine;
 using UnityEngine.UI;
 
 [System.Serializable]
@@ -42,19 +40,15 @@ public class ListGameManager : Singleton<ListGameManager>
         if (games.Length <= installed)
             return;
 
-        GameObject page =  Instantiate(pagePrefab, PageManager.Instance.ScrollContent);
+        GameObject page = Instantiate(pagePrefab, PageManager.Instance.ScrollContent);
 
-        for ( int i = 0; i < numGamePerPage; i++)
+        for (int i = 0; i < numGamePerPage; i++)
         {
             GameObject newGame = Instantiate(gamePrefab, page.transform);
             newGame.name = games[installed].sceneName;
 
             newGame.transform.Find("icon").GetComponent<Image>().sprite = games[installed].icon;
-            LanguageManager languageManager = newGame.transform.Find("name").GetComponent<LanguageManager>();
-
-            languageManager.vietnamese = games[installed].displayNameVn;
-            languageManager.english = games[installed].displayNameEn;
-            newGame.GetComponent<Button>().onClick.AddListener ( () => { MySceneManager.LoadScene(newGame.name); });
+            newGame.GetComponent<Button>().onClick.AddListener(() => { MySceneManager.LoadScene(newGame.name); });
 
             installed++;
         }

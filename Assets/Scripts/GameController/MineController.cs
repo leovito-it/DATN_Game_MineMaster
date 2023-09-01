@@ -1,28 +1,26 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class MineController : MonoBehaviour
 {
-    public Rule rule;
+    [SerializeField] Rule rule;
 
     [Header("Check and finish")]
-    public GameObject tryAgainMessage;
-    public Button quickCheck;
+    [SerializeField] GameObject tryAgainMessage;
+    [SerializeField] Button quickCheck;
 
     [Header("Prefabs")]
-    public GameObject mineObject;
-    public GameObject flagObject;
+    [SerializeField] GameObject mineObject;
+    [SerializeField] GameObject flagObject;
 
-    public Transform flagCount, flagDisable;
+    [SerializeField] Transform flagCount, flagDisable;
 
     public enum ClickType { Select, Flagged }
 
     [Header("Config")]
-    public Sprite clickedBg;
-    public Color[] numberColors = new Color[] { Color.black };
+    [SerializeField] Sprite clickedBg;
+    [SerializeField] Color[] numberColors = new Color[] { Color.black };
 
     ClickType clickType = ClickType.Select;
     float numMine = 10;
@@ -36,8 +34,8 @@ public class MineController : MonoBehaviour
     bool firstCheck = true;
     [SerializeField] bool isDebug = false;
 
-    static string TIME_OVER => LanguageManager.IsVietnamese ? "Thời gian" : "Over time";
-    static string NUM_END => LanguageManager.IsVietnamese ? "Số lượng mìn" : "Num of mine";
+    static string TIME_OVER => LanguageText.IsVietnamese ? "Thời gian" : "Over time";
+    static string NUM_END => LanguageText.IsVietnamese ? "Số lượng mìn" : "Num of mine";
 
     private void Start()
     {
@@ -101,7 +99,7 @@ public class MineController : MonoBehaviour
     void OnClickHandle(int index)
     {
         // khong cho nhan lai lan 2
-        if (clickedIndex.Contains(index) || !DEFINE.isPlaying)
+        if (clickedIndex.Contains(index) || DEFINE.Status != DEFINE.GameStatus.Playing)
             return;
 
         if (clickType == ClickType.Select)
@@ -254,7 +252,7 @@ public class MineController : MonoBehaviour
 
     void Win()
     {
-        DEFINE.isPlaying = false;
+        DEFINE.Status = DEFINE.GameStatus.Win;
         SetHighestScore();
 
         LevelManager.Instance.UnlockNextLevel();
@@ -262,7 +260,7 @@ public class MineController : MonoBehaviour
 
     void GameOver()
     {
-        DEFINE.isPlaying = false;
+        DEFINE.Status = DEFINE.GameStatus.Lose;
         SetHighestScore();
 
         LevelManager.Instance.Failed();

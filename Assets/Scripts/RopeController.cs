@@ -1,5 +1,4 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class RopeController : Singleton<RopeController>
@@ -18,6 +17,8 @@ public class RopeController : Singleton<RopeController>
     private bool isExtending = false;
     //[SerializeField]
     private bool isRetracting = false;
+    //[SerializeField]
+    public bool isHooking = false;
 
     [SerializeField] Animator hoistAnimator;
 
@@ -115,8 +116,10 @@ public class RopeController : Singleton<RopeController>
             isSwinging = true;
 
             ropeRenderer.SetPosition(1, Vector3.down * minLength);
+
             if (hookedObject != null)
             {
+                GameManager.Instance.AddCoin(hookedWeight);
                 Destroy(hookedObject);
             }
 
@@ -136,7 +139,7 @@ public class RopeController : Singleton<RopeController>
         hookedObject.transform.SetParent(hookContainer);
         hookedObject.transform.localPosition = Vector3.zero;
 
-        hookedWeight = hookedObject.GetComponent<PickupObject>().myWeight;
+        hookedWeight = hookedObject.GetComponent<PickupObject>().MyWeight;
 
         isExtending = false;
         isRetracting = true;

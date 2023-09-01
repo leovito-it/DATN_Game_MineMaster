@@ -1,6 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -8,27 +6,21 @@ using UnityEngine.UI;
 
 public static class DEFINE
 {
-    public static bool isPlaying = false;
-    public static bool isOpeningSettings = false;
-
-    #region NAME
-    public const string BLANK = "";
-    public const string NUMBER = "Number";
-    public const string PLAYER = "Player";
-    public const string PLAYER1 = "Player 1";
-    public const string PLAYER2 = "Player 2";
-    #endregion
+    public static GameStatus Status;
+    public enum GameStatus { Win, Lose, Skipped, Playing, Waiting, Tutorial }
 
     #region SCENE
-    public const string SCENE_HOME = "Home";
-    public const string SCENE_GAME_LIST = "GameList";
-    #endregion
+    public static string SceneName => SceneManager.GetActiveScene().name;
 
-    public static string LEVEL => LanguageManager.IsVietnamese ? "Cấp" : "Level";
-    public const string LANGUAGE = "Language";
+    public static Scenes LastScene = Scenes.None;
+    public static Scenes CurrentScene = Scenes.Loading;
 
-
-    public static string CurrentScene => SceneManager.GetActiveScene().name;
+    public static void LoadScene(this Scenes scene)
+    {
+        LastScene = CurrentScene;
+        CurrentScene = scene;
+        LoadScene($"{scene}");
+    }
 
     public static void LoadScene(string name)
     {
@@ -37,42 +29,10 @@ public static class DEFINE
         if (GameObject.FindObjectOfType<PopupManager>() != null)
             PopupManager.Instance.CloseAll();
     }
+    #endregion
 
-    public static string SetColor(this string txt, string colorId) => $"<b><color={colorId}>{txt}</color></b>";
-
-    public static void SetText(TextMeshProUGUI txtObj, string txt)
-    {
-        if (txtObj != null)
-            txtObj.text = txt;
-    }
-
-    public static void SetText(Text txtObj, string txt)
-    {
-        if (txtObj != null)
-            txtObj.text = txt;
-    }
-
-    public static void SaveKey(this string key, int value)
-    {
-        PlayerPrefs.SetInt(key, value);
-    }
-
-    public static void SaveKey(this string key, float value)
-    {
-        PlayerPrefs.SetFloat(key, value);
-    }
-
-    public static void SaveKey(this string key, string value)
-    {
-        PlayerPrefs.SetString(key, value);
-    }
-
-    public static void SaveText(this string message, string fileName)
-    {
-
-    }
-
-    public static string Format(this string input)
+    #region TEXT
+    public static string Format_LableStyle(this string input)
     {
         // Tìm và tách cả phần số cuối chuỗi
         string numericPart = Regex.Match(input, @"\d+$").Value;
@@ -92,5 +52,58 @@ public static class DEFINE
         }
 
         return formatted;
+    }
+
+    public static string SetColor(this string txt, string colorId) => $"<b><color=#{colorId}>{txt}</color></b>";
+
+    public static TextMeshProUGUI SetText(this TextMeshProUGUI txt, string content)
+    {
+        if (txt != null)
+            txt.text = content;
+        return txt;
+    }
+
+    public static Text SetText(this Text txt, string content)
+    {
+        if (txt != null)
+            txt.text = content;
+        return txt;
+    }
+
+    public static TextMeshProUGUI Clear(this TextMeshProUGUI txt, bool hide = false)
+    {
+        txt.SetText("");
+        if (hide)
+            txt.gameObject.SetActive(false);
+        return txt;
+    }
+
+    public static Text Empty(this Text txt, bool hide = false)
+    {
+        txt.SetText("");
+        if (hide)
+            txt.gameObject.SetActive(false);
+        return txt;
+    }
+    #endregion
+
+    public static void SaveKey(this string key, int value)
+    {
+        PlayerPrefs.SetInt(key, value);
+    }
+
+    public static void SaveKey(this string key, float value)
+    {
+        PlayerPrefs.SetFloat(key, value);
+    }
+
+    public static void SaveKey(this string key, string value)
+    {
+        PlayerPrefs.SetString(key, value);
+    }
+
+    public static void SaveText(this string message, string fileName)
+    {
+
     }
 }

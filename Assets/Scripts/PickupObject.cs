@@ -1,12 +1,11 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class PickupObject : MonoBehaviour
 {
-    public List<Sprite> listObject = new();
-    public int myWeight = 100;
+    [SerializeField] List<Sprite> listObject = new();
+    public int MyWeight = 100;
 
     const int MinWeight = 10;
     const int MaxWeight = 30;
@@ -27,8 +26,8 @@ public class PickupObject : MonoBehaviour
             img.SetNativeSize();
         }
 
-        myWeight = Random.Range(MinWeight, MaxWeight) * 10;
-        transform.localScale = Mathf.Lerp(0.5f, 1.2f, (myWeight - MinWeight * 10f) / ((MaxWeight - MinWeight) * 10f)) * Vector3.one;
+        MyWeight = Random.Range(MinWeight, MaxWeight) * 10;
+        transform.localScale = Mathf.Lerp(0.5f, 1.2f, (MyWeight - MinWeight * 10f) / ((MaxWeight - MinWeight) * 10f)) * Vector3.one;
 
         List<Cell> cells = SiteManager.Instance.cells;
 

@@ -2,47 +2,28 @@
 using System;
 using System.Collections.Generic;
 using TMPro;
-using UnityEditor;
 using UnityEngine;
-using UnityEngine.UI;
 
 [Serializable]
 public struct Rule
 {
-    public List<Vector2> defined;
+    public List<Vector2> Defined;
 
-    public Vector2 modify; // gia tri thay doi
-    public Vector2 limit; // gia tri gioi han
+    public Vector2 Modify; // gia tri thay doi
+    public Vector2 Limit; // gia tri gioi han
 }
-
-#if UNITY_EDITOR
-public static class DataCleaner
-{
-    [MenuItem("Tools/Reset level data this minigame")]
-    public static void ResetLevelData()
-    {
-        PlayerPrefs.DeleteKey(DEFINE.CurrentScene + DEFINE.LEVEL);
-        PlayerPrefs.Save();
-    }
-
-    [MenuItem("Tools/Reset all data")]
-    public static void ResetData()
-    {
-        PlayerPrefs.DeleteAll();
-        PlayerPrefs.Save();
-    }
-}
-#endif
 
 public class LevelManager : Singleton<LevelManager>
 {
-    public TextMeshProUGUI txtLv, txtProcess;
+    const string LEVEL = "Level";
 
-    public GameObject info, congratulations, failed;
+    [SerializeField] TextMeshProUGUI txtLv, txtProcess;
 
-    public TextMeshProUGUI title, text1, text2;
+    [SerializeField] GameObject info, congratulations, failed;
 
-    public AudioClip failClip, successClip;
+    [SerializeField] TextMeshProUGUI title, text1, text2;
+
+    [SerializeField] AudioClip failClip, successClip;
 
     public int Level => GetLevel();
     float m_var1, m_var2;
@@ -75,16 +56,16 @@ public class LevelManager : Singleton<LevelManager>
 
     public void SetInfo(string varName1, string varName2)
     {
-        DEFINE.SetText(title, DEFINE.LEVEL + " " + GetLevel());
-        DEFINE.SetText(text1, varName1 + ": " + DEFINE.SetColor(m_var1 + "", "#f00"));
-        DEFINE.SetText(text2, varName2 + ": " + DEFINE.SetColor(m_var2 + "", "#f00"));
+        DEFINE.SetText(title, LEVEL + " " + GetLevel());
+        DEFINE.SetText(text1, varName1 + ": " + DEFINE.SetColor(m_var1 + "", "f00"));
+        DEFINE.SetText(text2, varName2 + ": " + DEFINE.SetColor(m_var2 + "", "f00"));
     }
 
     public void ShowInfo()
     {
         info.SetActive(true);
 
-        DEFINE.isPlaying = false;
+        DEFINE.Status = DEFINE.GameStatus.Waiting;
     }
 
     public void CloseInfo()
@@ -92,7 +73,7 @@ public class LevelManager : Singleton<LevelManager>
         info.SetActive(false);
         showInfo = false;
 
-        DEFINE.isPlaying = true;
+        DEFINE.Status = DEFINE.GameStatus.Playing;
     }
 
     public void Failed()
@@ -107,44 +88,44 @@ public class LevelManager : Singleton<LevelManager>
 
         showInfo = true;
         showCongratulations = true;
-        DEFINE.LoadScene(DEFINE.CurrentScene);
+        DEFINE.LoadScene(DEFINE.SceneName);
     }
 
     public int GetLevel()
     {
-        return PlayerPrefs.GetInt(DEFINE.CurrentScene + DEFINE.LEVEL, 1);
+        return PlayerPrefs.GetInt(DEFINE.SceneName + LEVEL, 1);
     }
 
     void SaveLevel()
     {
-        DEFINE.SaveKey(DEFINE.CurrentScene + DEFINE.LEVEL, Level);
+        DEFINE.SaveKey(DEFINE.SceneName + LEVEL, Level);
     }
 
     void NextLevel()
     {
-        DEFINE.SaveKey(DEFINE.CurrentScene + DEFINE.LEVEL, Level + 1);
+        DEFINE.SaveKey(DEFINE.SceneName + LEVEL, Level + 1);
     }
 
     public void UpdateVars(ref float var1, ref float var2, Rule rule)
     {
         float old1 = var1, old2 = var2;
         // Get var
-        if (rule.defined.Count > Level - 1)
+        if (rule.Defined.Count > Level - 1)
         {
-            var1 = rule.defined[Level - 1].x;
-            var2 = rule.defined[Level - 1].y;
+            var1 = rule.Defined[Level - 1].x;
+            var2 = rule.Defined[Level - 1].y;
         }
         else
         {
-            int maxLevelDefined = rule.defined.Count;
+            int maxLevelDefined = rule.Defined.Count;
 
-            var1 = rule.defined[maxLevelDefined - 1].x + (Level - maxLevelDefined) * rule.modify.x;
-            var2 = rule.defined[maxLevelDefined - 1].y + (Level - maxLevelDefined) * rule.modify.y;
+            var1 = rule.Defined[maxLevelDefined - 1].x + (Level - maxLevelDefined) * rule.Modify.x;
+            var2 = rule.Defined[maxLevelDefined - 1].y + (Level - maxLevelDefined) * rule.Modify.y;
         }
 
         // Limit var
-        var1 = rule.modify.x > 0 ? Mathf.Min(var1, rule.limit.x) : Mathf.Max(var1, rule.limit.x);
-        var2 = rule.modify.y > 0 ? Mathf.Min(var2, rule.limit.y) : Mathf.Max(var2, rule.limit.y);
+        var1 = rule.Modify.x > 0 ? Mathf.Min(var1, rule.Limit.x) : Mathf.Max(var1, rule.Limit.x);
+        var2 = rule.Modify.y > 0 ? Mathf.Min(var2, rule.Limit.y) : Mathf.Max(var2, rule.Limit.y);
 
         m_var1 = var1;
         m_var2 = var2;

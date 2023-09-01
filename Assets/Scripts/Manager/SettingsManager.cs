@@ -1,5 +1,6 @@
 ﻿using SFX;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
@@ -58,20 +59,15 @@ public class SettingsManager : MonoBehaviour
 
     static void ChangeCurrentLanguage()
     {
-        DEFINE.SaveKey(DEFINE.LANGUAGE, LanguageManager.IsVietnamese ?
-            SystemLanguage.English.ToString() : SystemLanguage.Vietnamese.ToString());
-
-        foreach (LanguageManager lm in FindObjectsOfType<LanguageManager>())
+        foreach (var text in FindObjectsOfType<TextMeshProUGUI>())
         {
-            lm.UseLanguageText();
+
         }
 
 #if UNITY_EDITOR
-        List<GameObject> objects = new List<GameObject>();
-        foreach (Object obj in FindObjectsOfType(typeof(LanguageManager)))
-        {
-            objects.Add(GameObject.Find(obj.name));
-        }
+        List<GameObject> objects = new();
+        objects.AddRange(from Object obj in FindObjectsOfType(typeof(LanguageText))
+                         select GameObject.Find(obj.name));
         Selection.objects = objects.ToArray();
 
         foreach (Object obj in Selection.objects)

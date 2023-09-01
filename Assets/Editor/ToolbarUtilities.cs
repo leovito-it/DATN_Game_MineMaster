@@ -21,6 +21,13 @@ public static class ToolbarUtilities
     private static string[] _scenePaths;
     private static string[] _sceneNames;
 
+    [MenuItem("Tools/Reset all data")]
+    public static void ResetData()
+    {
+        PlayerPrefs.DeleteAll();
+        PlayerPrefs.Save();
+    }
+
     static ToolbarUtilities()
     {
         EditorApplication.delayCall += () =>
