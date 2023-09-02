@@ -26,10 +26,14 @@ public class RopeController : Singleton<RopeController>
     [SerializeField] Transform hookContainer;
     Animator hookAnimator;
     GameObject hookedObject;
-    [SerializeField] int hookedWeight = 0;
+
+    int hookedWeight = 0;
+    int hookedValue = 0;
 
     private float currentRotation = 0f;
     private int rotateDirection = 1;
+
+    bool PlayerClicked => Input.GetMouseButtonDown(0) && DEFINE.Status == DEFINE.GameStatus.Playing;
 
     private void Start()
     {
@@ -48,7 +52,7 @@ public class RopeController : Singleton<RopeController>
             RotateRope();
         }
 
-        if (Input.GetMouseButtonDown(0) && isSwinging)
+        if (PlayerClicked && isSwinging)
         {
             isSwinging = false;
             isExtending = true;
@@ -119,7 +123,7 @@ public class RopeController : Singleton<RopeController>
 
             if (hookedObject != null)
             {
-                GameManager.Instance.AddCoin(hookedWeight);
+                GameManager.Instance.AddCoin(hookedValue);
                 Destroy(hookedObject);
             }
 
@@ -139,25 +143,20 @@ public class RopeController : Singleton<RopeController>
         hookedObject.transform.SetParent(hookContainer);
         hookedObject.transform.localPosition = Vector3.zero;
 
-        hookedWeight = hookedObject.GetComponent<PickupObject>().MyWeight;
+        if (hookedObject.TryGetComponent(out PickupObject pickupObject))
+        {
+            hookedWeight = pickupObject.MyWeight;
+            hookedValue = pickupObject.MyValue;
+        };
 
         isExtending = false;
         isRetracting = true;
     }
 
-    void PlayAnim(Animator animator)
-    {
-        animator.Play("play");
-    }
+    void PlayAnim(Animator animator) => animator.Play("play");
 
-    void PlayAnimInvert(Animator animator)
-    {
-        animator.Play("playInvert");
-    }
+    void PlayAnimInvert(Animator animator) => animator.Play("playInvert");
 
-    void StopAnim(Animator animator)
-    {
-        animator.Play("nothing");
-    }
+    void StopAnim(Animator animator) => animator.Play("nothing");
 }
 

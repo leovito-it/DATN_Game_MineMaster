@@ -25,15 +25,20 @@ public class LevelManager : Singleton<LevelManager>
 
     [SerializeField] AudioClip failClip, successClip;
 
-    public int Level => GetLevel();
+    public static int CurrentLevel
+    {
+        get => PlayerPrefs.GetInt(LEVEL, 1);
+        set => DEFINE.SaveKey(LEVEL, value);
+    }
+
     float m_var1, m_var2;
 
-    static bool showInfo = false;
+    static bool showInfo = true;
     static bool showCongratulations = false;
 
     private void Start()
     {
-        DEFINE.SetText(txtLv, "LV. " + Level);
+        DEFINE.SetText(txtLv, "Level " + CurrentLevel);
 
         Reset();
 
@@ -54,16 +59,17 @@ public class LevelManager : Singleton<LevelManager>
         DEFINE.SetText(txtProcess, $"{current} / {final}");
     }
 
-    public void SetInfo(string varName1, string varName2)
+    public void SetInfo()
     {
-        DEFINE.SetText(title, LEVEL + " " + GetLevel());
-        DEFINE.SetText(text1, varName1 + ": " + DEFINE.SetColor(m_var1 + "", "f00"));
-        DEFINE.SetText(text2, varName2 + ": " + DEFINE.SetColor(m_var2 + "", "f00"));
+        DEFINE.SetText(title, LEVEL + " " + CurrentLevel);
+        DEFINE.SetText(text1, DEFINE.SetColor(m_var1 + "", "f00"));
+        DEFINE.SetText(text2, DEFINE.SetColor(m_var2 + "", "f00"));
     }
 
     public void ShowInfo()
     {
         info.SetActive(true);
+        showInfo = true;
 
         DEFINE.Status = DEFINE.GameStatus.Waiting;
     }
@@ -84,43 +90,28 @@ public class LevelManager : Singleton<LevelManager>
 
     public void UnlockNextLevel()
     {
-        NextLevel();
+        CurrentLevel += 1;
 
         showInfo = true;
         showCongratulations = true;
         DEFINE.LoadScene(DEFINE.SceneName);
     }
 
-    public int GetLevel()
-    {
-        return PlayerPrefs.GetInt(DEFINE.SceneName + LEVEL, 1);
-    }
-
-    void SaveLevel()
-    {
-        DEFINE.SaveKey(DEFINE.SceneName + LEVEL, Level);
-    }
-
-    void NextLevel()
-    {
-        DEFINE.SaveKey(DEFINE.SceneName + LEVEL, Level + 1);
-    }
-
     public void UpdateVars(ref float var1, ref float var2, Rule rule)
     {
         float old1 = var1, old2 = var2;
         // Get var
-        if (rule.Defined.Count > Level - 1)
+        if (rule.Defined.Count > CurrentLevel - 1)
         {
-            var1 = rule.Defined[Level - 1].x;
-            var2 = rule.Defined[Level - 1].y;
+            var1 = rule.Defined[CurrentLevel - 1].x;
+            var2 = rule.Defined[CurrentLevel - 1].y;
         }
         else
         {
             int maxLevelDefined = rule.Defined.Count;
 
-            var1 = rule.Defined[maxLevelDefined - 1].x + (Level - maxLevelDefined) * rule.Modify.x;
-            var2 = rule.Defined[maxLevelDefined - 1].y + (Level - maxLevelDefined) * rule.Modify.y;
+            var1 = rule.Defined[maxLevelDefined - 1].x + (CurrentLevel - maxLevelDefined) * rule.Modify.x;
+            var2 = rule.Defined[maxLevelDefined - 1].y + (CurrentLevel - maxLevelDefined) * rule.Modify.y;
         }
 
         // Limit var

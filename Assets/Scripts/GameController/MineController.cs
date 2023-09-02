@@ -39,13 +39,9 @@ public class MineController : MonoBehaviour
 
     private void Start()
     {
-        UIManager.Instance.SetTextLevel(LevelManager.Instance.Level);
-
         LevelManager.Instance.UpdateVars(ref endTime, ref numMine, rule);
-        LevelManager.Instance.SetInfo(TIME_OVER, NUM_END);
+        LevelManager.Instance.SetInfo();
         LevelManager.Instance.SetProcess(0, (int)numMine);
-
-        UIManager.Instance.SetTextTarget((int)numMine);
 
         InitMines();
         InitFlagCount();
