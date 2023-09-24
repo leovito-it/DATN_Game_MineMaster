@@ -1,19 +1,3 @@
-﻿using UnityEngine;
-
-namespace IngameDebugConsole.Commands
-{
-	public class TimeCommands
-	{
-		[ConsoleMethod( "time.scale", "Sets the Time.timeScale value" ), UnityEngine.Scripting.Preserve]
-		public static void SetTimeScale( float value )
-		{
-			Time.timeScale = Mathf.Max( value, 0f );
-		}
-
-		[ConsoleMethod( "time.scale", "Returns the current Time.timeScale value" ), UnityEngine.Scripting.Preserve]
-		public static float GetTimeScale()
-		{
-			return Time.timeScale;
-		}
-	}
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:c2bbbce44c0aeecaf2aff2251dda8536ccc9007ccddaca3dc202c00393d9c40c
+size 497

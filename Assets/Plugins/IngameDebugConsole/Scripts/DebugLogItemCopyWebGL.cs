@@ -1,36 +1,3 @@
-﻿#if !UNITY_EDITOR && UNITY_WEBGL
-using System.Runtime.InteropServices;
-using UnityEngine;
-using UnityEngine.EventSystems;
-
-namespace IngameDebugConsole
-{
-	public class DebugLogItemCopyWebGL : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
-	{
-		[DllImport( "__Internal" )]
-		private static extern void IngameDebugConsoleStartCopy( string textToCopy );
-		[DllImport( "__Internal" )]
-		private static extern void IngameDebugConsoleCancelCopy();
-
-		private DebugLogItem logItem;
-
-		public void Initialize( DebugLogItem logItem )
-		{
-			this.logItem = logItem;
-		}
-
-		public void OnPointerDown( PointerEventData eventData )
-		{
-			string log = logItem.GetCopyContent();
-			if( !string.IsNullOrEmpty( log ) )
-				IngameDebugConsoleStartCopy( log );
-		}
-
-		public void OnPointerUp( PointerEventData eventData )
-		{
-			if( eventData.dragging )
-				IngameDebugConsoleCancelCopy();
-		}
-	}
-}
-#endif
+version https://git-lfs.github.com/spec/v1
+oid sha256:cd3570881557d1d48394c2e116bf854f8011e0fbc1ba9f47ea749cbc76bcec16
+size 932

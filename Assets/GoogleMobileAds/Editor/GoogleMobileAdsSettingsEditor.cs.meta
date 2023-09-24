@@ -1,17 +1,3 @@
-fileFormatVersion: 2
-guid: 8afb1338afbd34c4fac628cd6175c032
-labels:
-- gvh
-- gvh_version-7.3.1
-- gvhp_exportpath-GoogleMobileAds/Editor/GoogleMobileAdsSettingsEditor.cs
-timeCreated: 1480838400
-MonoImporter:
-  externalObjects: {}
-  serializedVersion: 2
-  defaultReferences: []
-  executionOrder: 0
-  icon:
-    instanceID: 0
-  userData:
-  assetBundleName:
-  assetBundleVariant:
+version https://git-lfs.github.com/spec/v1
+oid sha256:ba79854ecfd0194a094aa2e04c98aa99053ed81a9ab10cc14b1d11bc49446ff5
+size 391

@@ -1,24 +1,3 @@
-﻿using UnityEngine;
-using UnityEngine.EventSystems;
-
-// Listens to drag event on the DebugLogManager's resize button
-namespace IngameDebugConsole
-{
-	public class DebugLogResizeListener : MonoBehaviour, IBeginDragHandler, IDragHandler
-	{
-#pragma warning disable 0649
-		[SerializeField]
-		private DebugLogManager debugManager;
-#pragma warning restore 0649
-
-		// This interface must be implemented in order to receive drag events
-		void IBeginDragHandler.OnBeginDrag( PointerEventData eventData )
-		{
-		}
-
-		void IDragHandler.OnDrag( PointerEventData eventData )
-		{
-			debugManager.Resize( eventData );
-		}
-	}
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:ac87a1abc7ce8a6b7e9eab6cc4e96064d5dde85f6eaf9387dc26b1aa0e9c886f
+size 634

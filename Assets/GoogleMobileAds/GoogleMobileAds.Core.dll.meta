@@ -1,11 +1,3 @@
-fileFormatVersion: 2
-guid: 36487fa6a5984d3a80bc98eca8a2b9e6
-labels:
-- gvh
-- gvh_version-7.3.1
-- gvhp_exportpath-GoogleMobileAds/GoogleMobileAds.Core.dll
-timeCreated: 1480838400
-DefaultImporter:
-  userData:
-  assetBundleName:
-  assetBundleVariant:
+version https://git-lfs.github.com/spec/v1
+oid sha256:1d059606123ba5ab4d9fd856e603a5285d9f7712c79a212e7e20cda5b286d99d
+size 258
